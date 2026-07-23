@@ -1,0 +1,24 @@
+Agrivoltaics Economic Feasibility Framework
+
+Capital Stack:
+- Direct ownership: farmer retains RECs and tax credits (ITC 30% baseline under IRA).
+- Third-party PPA: lower upfront capital, reduced export revenue share.
+- Operating leases for land under panels: $800–$2,500 per acre-year depending on region.
+
+Revenue Streams:
+1. On-site load offset (retail rate avoidance)
+2. Net metering export at avoided-cost or retail-equivalent tariffs
+3. Ancillary crop revenue under elevated structures
+4. Carbon or ecosystem service credits (emerging markets)
+
+Sensitivity Variables:
+- Module efficiency (20–23% mono-PERC typical)
+- System capacity factor (18–28% fixed-tilt; up to 32% tracking)
+- Crop yield penalty (0–35% depending on shade fraction and cultivar)
+- O&M: $15–$25/kW-year
+
+Planning Actions:
+1. Commission solar resource assessment (TMY3 or local irradiance dataset)
+2. Run crop shade tolerance trials on 0.5–2 acre pilot blocks
+3. Engage utility interconnection pre-application
+4. Model dual revenue NPV over 25-year asset life

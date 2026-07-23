@@ -1,0 +1,12 @@
+{"id": "q01", "question": "What row spacing do I need between agrivoltaic panel rows for mid-size tractors?", "expected_sources": ["agrivoltaics_site_assessment.md"], "notes": "Expect ~20-30 ft."}
+{"id": "q02", "question": "What soil pH range is best for crop rotations under solar panels?", "expected_sources": ["agrivoltaics_site_assessment.md"], "notes": "Expect pH 6.0-7.2, loam to sandy-loam."}
+{"id": "q03", "question": "How much does partial shade from panels reduce peak evapotranspiration?", "expected_sources": ["agrivoltaics_site_assessment.md"], "notes": "Expect 15-30%."}
+{"id": "q04", "question": "What does it cost to install elevated agrivoltaic structures per watt?", "expected_sources": ["agrivoltaics_site_assessment.md"], "notes": "Expect $1.20-$2.50 per watt DC."}
+{"id": "q05", "question": "Which crops tolerate partial shade under solar panels?", "expected_sources": ["agrivoltaics_site_assessment.md"], "notes": "Leafy greens, alfalfa, berries."}
+{"id": "q06", "question": "How much can single-axis tracking increase solar harvest compared to fixed tilt?", "expected_sources": ["agrivoltaics_site_assessment.md"], "notes": "Expect 15-25%."}
+{"id": "q07", "question": "What are typical land lease rates for land under solar panels per acre per year?", "expected_sources": ["economic_feasibility.txt"], "notes": "Expect $800-$2,500 per acre-year."}
+{"id": "q08", "question": "What is the federal investment tax credit baseline for solar under the IRA?", "expected_sources": ["economic_feasibility.txt"], "notes": "Expect ITC 30%."}
+{"id": "q09", "question": "What are typical operations and maintenance costs for a solar system per kW per year?", "expected_sources": ["economic_feasibility.txt"], "notes": "Expect $15-$25/kW-year."}
+{"id": "q10", "question": "What planning actions should I take before building an agrivoltaic system?", "expected_sources": ["economic_feasibility.txt"], "notes": "Solar resource assessment, pilot trials, interconnection, NPV model."}
+{"id": "q11", "question": "How do I keep my chickens healthy in winter?", "expected_sources": [], "notes": "General knowledge; likely no KB match. Tests low-confidence behavior."}
+{"id": "q12", "question": "What is the best month to plant tomatoes in a temperate climate?", "expected_sources": [], "notes": "General knowledge; likely no KB match."}

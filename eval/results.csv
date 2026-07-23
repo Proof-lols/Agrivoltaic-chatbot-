@@ -1,0 +1,3 @@
+id,question,expected_sources,retrieved_sources,top_distance,retrieval_hit,grounded_score,ungrounded_score
+q01,What row spacing do I need between agrivoltaic panel rows for mid-size tractors?,agrivoltaics_site_assessment.md,Prompt Results full copy and paste (1).pdf; Prompt Results full copy and paste (1).pdf; Prompting part by part.pdf; Prompt Results full copy and paste (1).pdf; Prompt Results full copy and paste (1).pdf,0.2880,False,,
+q02,What soil pH range is best for crop rotations under solar panels?,agrivoltaics_site_assessment.md,Prompting part by part.pdf; agrivoltaics_site_assessment.md; Prompting part by part.pdf; Prompting part by part.pdf; Prompting part by part.pdf,0.4622,True,,
