@@ -198,7 +198,11 @@ def _render_projects_section(
                     st.warning("Please enter a project name.")
 
         if len(projects) > 1:
-            if st.button("Delete this project", use_container_width=True):
+            if st.button(
+                "🗑️ Delete project",
+                use_container_width=True,
+                help="Delete this project and its conversations",
+            ):
                 st.session_state.store.delete_by_project(active["id"])
                 project_store.delete(active["id"])
                 st.session_state.current_project_id = None
@@ -226,7 +230,7 @@ def _render_conversation_sidebar(
 
         current_id = st.session_state.current_conversation_id
         for conv in conversations:
-            open_col, delete_col = st.columns([0.82, 0.18])
+            open_col, delete_col = st.columns([0.85, 0.15])
             prefix = "> " if conv["id"] == current_id else ""
             with open_col:
                 if st.button(
@@ -242,7 +246,12 @@ def _render_conversation_sidebar(
                         engine.load_history(st.session_state.messages)
                         st.rerun()
             with delete_col:
-                if st.button("Delete", key=f"del_{conv['id']}", use_container_width=True):
+                if st.button(
+                    "🗑️",
+                    key=f"del_{conv['id']}",
+                    use_container_width=True,
+                    help="Delete this conversation",
+                ):
                     store.delete(conv["id"])
                     if current_id == conv["id"]:
                         _start_new_conversation(engine)
