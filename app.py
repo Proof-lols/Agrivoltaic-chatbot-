@@ -326,6 +326,13 @@ def main() -> None:
         engine.set_topic(active_project.get("topic") if active_project else None)
     _render_conversation_sidebar(engine, store, project_id)
 
+    with st.sidebar:
+        st.divider()
+        st.caption(
+            "Notice: Early-stage prototype for proof-of-concept testing only. Outputs are "
+            "subject to change and must not be the sole basis for business decisions."
+        )
+
     header_col1, header_col2 = st.columns([1, 6], vertical_alignment="center")
     with header_col1:
         if _HAS_LOGO:
@@ -335,6 +342,11 @@ def main() -> None:
     with header_col2:
         st.title("Agrivoltaics AI Assistant")
     st.markdown("Ask me anything about agrivoltaics implementation!")
+    st.caption(
+        "⚠️ Disclaimer: This application is a prototype intended for demonstration and "
+        "evaluation purposes only and should not be relied upon for critical operational "
+        "or strategic decision-making."
+    )
 
     if researcher:
         st.caption(
