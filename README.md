@@ -1,64 +1,73 @@
-# Agrivoltaics RAG Decision-Support Chatbot
+# Agrivoltaics Farm Assistant
 
-Production-grade Streamlit application combining **OpenAI GPT-4o**, **ChromaDB RAG**, and **vetted .edu/.org web search** for interactive agrivoltaics farm planning.
+A friendly Streamlit chatbot that helps farmers with agrivoltaics questions. It uses a
+local RAG (retrieval-augmented generation) knowledge base silently in the background to
+give more grounded answers, organizes chats into **Projects**, and keeps a history of past
+conversations.
 
 ## Features
 
-- **Two-step evaluation loop** — validates four core pillars (acreage, soil, microclimate, capital) before final recommendations
-- **Proactive question escalation** — advances consultation toward tracking, tilt, net-metering, and cultivar optimization
-- **Local RAG pipeline** — `retrieve_context()` with `text-embedding-3-small` and source/page citations
-- **Credibility-constrained web search** — Tavily queries append `site:.edu OR site:.org` filters
-- **Streaming GPT-4o** — structured Markdown sections with hardcoded system prompt matrix
+- Plain-language farm assistant powered by OpenAI.
+- Background RAG over a local ChromaDB vector store (no jargon shown to users).
+- Projects to group conversations by topic, plus saved conversation history.
+- Hidden researcher/audit mode via `?researcher=1` for inspecting retrieved sources.
 
-## Quick Start
+## Run locally
 
 ```bash
-cd C:\Users\noahm\Projects\agrivoltaics-rag-chatbot
+# 1. Create and activate a virtual environment
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate    # macOS/Linux
+
+# 2. Install dependencies
 pip install -r requirements.txt
-copy .env.example .env
-# Edit .env with your OPENAI_API_KEY (and optional TAVILY_API_KEY)
+
+# 3. Add your OpenAI key
+copy .env.example .env         # then edit .env and set OPENAI_API_KEY
+
+# 4. (Optional) Rebuild the vector store from knowledge_base/
+python ingest.py
+
+# 5. Launch the app
 streamlit run app.py
 ```
 
-1. Open the sidebar and click **Ingest / Rebuild Vector Store**
-2. Add `.txt`, `.md`, or `.pdf` files to `knowledge_base/`
-3. Chat with the assistant — missing pillar data triggers the collection form
+The app opens at http://localhost:8501.
 
-## Project Structure
+## Deploy to Streamlit Community Cloud
 
+1. Push this repo to GitHub (already done).
+2. Go to https://share.streamlit.io → **New app** → select this repo, branch `main`,
+   main file `app.py`.
+3. In **Advanced settings → Secrets**, add your key:
+   ```toml
+   OPENAI_API_KEY = "sk-..."
+   ```
+4. Click **Deploy**.
+
+Notes:
+- The prebuilt vector store in `chroma_db/` is committed, so RAG works immediately on
+  deploy with no extra build step.
+- `pysqlite3-binary` is installed on Linux hosts to satisfy ChromaDB's SQLite version
+  requirement (handled automatically via `requirements.txt` and a shim in `app.py`).
+- Saved conversations and projects are written to the local filesystem, which is
+  **ephemeral** on Streamlit Cloud — they reset when the app restarts. Use a host with a
+  persistent disk (e.g. Render, Railway) if you need them to persist.
+
+## Configuration
+
+Settings are read from environment variables / `.env` (see `config/settings.py`):
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `OPENAI_API_KEY` | _(required)_ | OpenAI API key |
+| `TAVILY_API_KEY` | _(optional)_ | Optional web search |
+| `CHAT_MODEL` | `gpt-4o` | Chat model |
+| `EMBEDDING_MODEL` | `text-embedding-3-small` | Embedding model |
+
+## Tests
+
+```bash
+pytest -q
 ```
-app.py                          # Streamlit UI entry point
-config/settings.py              # Environment + system prompt constants
-src/
-  models.py                     # Pydantic domain models
-  validation/pillar_validator.py
-  conversation/state_tracker.py
-  rag/ingestion.py              # Vector store builder
-  rag/retriever.py              # retrieve_context()
-  search/web_search.py          # Domain-filtered Tavily wrapper
-  chat/engine.py                # GPT-4o streaming orchestrator
-knowledge_base/                 # Local documents for RAG
-```
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `OPENAI_API_KEY` | Yes | Chat (gpt-4o) and embeddings |
-| `TAVILY_API_KEY` | No | Live .edu/.org web search fallback |
-| `KNOWLEDGE_BASE_DIR` | No | Default `./knowledge_base` |
-| `CHROMA_PERSIST_DIR` | No | Default `./chroma_db` |
-
-## Response Sections
-
-Every assistant reply is formatted into:
-
-- Agricultural Analysis & Localized Site Context
-- Solar System Geometry & Shading Optimization
-- Botanical Assessment & Cultivar Selection
-- Economic Feasibility & Capital Requirements Analysis
-- Suggested Forward-Moving Planning Actions
-
-When pillars are incomplete, a **CRITICAL DATA NEEDED** section and sidebar form appear automatically.

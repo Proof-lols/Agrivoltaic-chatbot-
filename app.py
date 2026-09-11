@@ -2,6 +2,17 @@
 
 from __future__ import annotations
 
+# ChromaDB requires SQLite >= 3.35. Some hosts (e.g. Streamlit Community Cloud)
+# ship an older system SQLite, so swap in the pysqlite3 backport when it's
+# installed. This is a no-op locally (e.g. on Windows) where pysqlite3 is absent.
+try:  # noqa: SIM105
+    __import__("pysqlite3")
+    import sys as _sys
+
+    _sys.modules["sqlite3"] = _sys.modules.pop("pysqlite3")
+except Exception:  # noqa: BLE001
+    pass
+
 import logging
 import sys
 from pathlib import Path
