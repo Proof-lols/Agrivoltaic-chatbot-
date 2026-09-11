@@ -83,7 +83,6 @@ class VettedWebSearch:
                 query=filtered_query,
                 search_depth="advanced",
                 max_results=max_results * 3,
-                include_domains=["edu", "org"],
             )
 
             for item in response.get("results", []):

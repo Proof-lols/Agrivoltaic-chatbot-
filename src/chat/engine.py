@@ -139,6 +139,15 @@ class FarmChatEngine:
         except Exception as exc:  # noqa: BLE001
             logger.exception("complete_turn failed: %s", exc)
 
+    def discard_last_turn(self) -> None:
+        """Drop a trailing user message that never received an assistant reply.
+
+        Called after a failed turn so the unanswered question does not pollute the
+        context sent on the next request.
+        """
+        if self._history and self._history[-1].role == "user":
+            self._history.pop()
+
     def reset(self) -> None:
         """Clear conversation history."""
         self._history.clear()

@@ -76,7 +76,7 @@ class KnowledgeBaseIngester:
                     logger.warning("Rate limit hit, retrying in %ss...", wait)
                     time.sleep(wait)
             else:
-                raise RateLimitError("Exceeded embedding retries after rate limits.")
+                raise RuntimeError("Exceeded embedding retries after repeated rate limits.")
             time.sleep(0.5)
         return all_embeddings
 

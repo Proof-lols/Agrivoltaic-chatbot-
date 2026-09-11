@@ -29,7 +29,7 @@ def main() -> None:
     client = OpenAI(api_key=settings.openai_api_key)
     ingester = KnowledgeBaseIngester(settings, client)
     count = ingester.collection_count
-    print(f"\n=== VECTOR STORE ===")
+    print("\n=== VECTOR STORE ===")
     print(f"Indexed chunks in ChromaDB: {count}")
 
     if count == 0 and supported:

@@ -14,6 +14,7 @@ except Exception:  # noqa: BLE001
     pass
 
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -99,11 +100,35 @@ def _init_session_state() -> None:
         st.session_state.current_project_id = None
 
 
+def _load_secrets_into_env() -> None:
+    """Bridge Streamlit secrets into environment variables for pydantic Settings.
+
+    On Streamlit Community Cloud, config is provided via ``st.secrets``. Copy any
+    string secrets into ``os.environ`` (without overwriting existing values) so that
+    pydantic-settings can read them the same way it reads a local ``.env`` file.
+    """
+    try:
+        secrets = st.secrets
+        items = list(secrets.items())
+    except Exception:  # noqa: BLE001
+        # No secrets file configured (e.g. local dev using .env) — nothing to bridge.
+        return
+    for key, value in items:
+        try:
+            if isinstance(value, str) and key not in os.environ:
+                os.environ[key] = value
+        except Exception:  # noqa: BLE001
+            continue
+
+
 def _load_settings() -> Settings | None:
     try:
         return Settings()
     except Exception as exc:  # noqa: BLE001
-        st.error("Something went wrong starting up. Please contact your administrator.")
+        st.error(
+            "Something went wrong starting up: the OpenAI API key is missing or invalid. "
+            "If you administer this app, set OPENAI_API_KEY in the app's Secrets and reboot."
+        )
         logger.exception("Settings load failed: %s", exc)
         return None
 
@@ -269,12 +294,16 @@ def _render_conversation_sidebar(
                     st.rerun()
 
 
-LOGO_PATH = str(PROJECT_ROOT / "assets" / "solar_logo.png")
+LOGO_FILE = PROJECT_ROOT / "assets" / "solar_logo.png"
+LOGO_PATH = str(LOGO_FILE)
+_HAS_LOGO = LOGO_FILE.exists()
 
 
 def main() -> None:
-    st.set_page_config(page_title="AgriBot", page_icon=LOGO_PATH, layout="centered")
+    page_icon = LOGO_PATH if _HAS_LOGO else "🌱"
+    st.set_page_config(page_title="AgriBot", page_icon=page_icon, layout="centered")
 
+    _load_secrets_into_env()
     settings = _load_settings()
     if settings is None:
         st.stop()
@@ -299,7 +328,10 @@ def main() -> None:
 
     header_col1, header_col2 = st.columns([1, 6], vertical_alignment="center")
     with header_col1:
-        st.image(LOGO_PATH, width=70)
+        if _HAS_LOGO:
+            st.image(LOGO_PATH, width=70)
+        else:
+            st.markdown("## 🌱")
     with header_col2:
         st.title("Agrivoltaics AI Assistant")
     st.markdown("Ask me anything about agrivoltaics implementation!")
@@ -351,6 +383,8 @@ def main() -> None:
 
         if not failed:
             engine.complete_turn(user_input, streamed_text)
+        else:
+            engine.discard_last_turn()
         st.session_state.messages.append(
             {"role": "assistant", "content": streamed_text, "audit": audit, "error": failed}
         )

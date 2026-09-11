@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.chat.engine import ChatError, FarmChatEngine
-from src.models import ChatTurnResult, RetrievalChunk, RetrievalResult
+from src.models import ChatMessage, ChatTurnResult, RetrievalChunk, RetrievalResult
 
 
 def test_system_content_includes_context_when_chunks_present() -> None:
@@ -51,3 +51,24 @@ def test_chat_error_carries_kind() -> None:
     err = ChatError("busy", "rate limited")
     assert err.kind == "busy"
     assert "rate limited" in str(err)
+
+
+def test_discard_last_turn_removes_dangling_user() -> None:
+    engine = FarmChatEngine(settings=None, openai_client=None, retriever=None)
+    engine._history = [
+        ChatMessage(role="user", content="first"),
+        ChatMessage(role="assistant", content="reply"),
+        ChatMessage(role="user", content="unanswered"),
+    ]
+    engine.discard_last_turn()
+    assert [m.role for m in engine._history] == ["user", "assistant"]
+
+
+def test_discard_last_turn_keeps_completed_turn() -> None:
+    engine = FarmChatEngine(settings=None, openai_client=None, retriever=None)
+    engine._history = [
+        ChatMessage(role="user", content="q"),
+        ChatMessage(role="assistant", content="a"),
+    ]
+    engine.discard_last_turn()
+    assert len(engine._history) == 2
